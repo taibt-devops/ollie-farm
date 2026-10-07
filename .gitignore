@@ -1,0 +1,10 @@
+build/
+dist/
+__pycache__/
+android/.gradle/
+android/app/build/
+android/build/
+android/local.properties
+# release signing key (shared with Word Island) — back it up instead of committing it
+android/keystore/
+android/keystore.properties

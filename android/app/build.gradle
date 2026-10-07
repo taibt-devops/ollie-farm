@@ -1,0 +1,53 @@
+plugins {
+    id 'com.android.application'
+}
+
+// Release signing comes from android/keystore.properties (created by build-apk.ps1, never committed).
+def keystoreProps = new Properties()
+def keystoreFile = rootProject.file('keystore.properties')
+if (keystoreFile.exists()) {
+    keystoreFile.withInputStream { keystoreProps.load(it) }
+}
+
+android {
+    namespace 'com.olliefarm.app'
+    compileSdk 36
+
+    defaultConfig {
+        applicationId 'com.olliefarm.app'
+        minSdk 24
+        targetSdk 36
+        versionCode 1
+        versionName '0.1'
+    }
+
+    signingConfigs {
+        release {
+            if (keystoreFile.exists()) {
+                storeFile rootProject.file(keystoreProps['storeFile'])
+                storePassword keystoreProps['storePassword']
+                keyAlias keystoreProps['keyAlias']
+                keyPassword keystoreProps['keyPassword']
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig keystoreFile.exists() ? signingConfigs.release : null
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    // The game folder itself is the asset root: file:///android_asset/index.html
+    sourceSets {
+        main {
+            assets.srcDirs = ['../../game']
+        }
+    }
+}

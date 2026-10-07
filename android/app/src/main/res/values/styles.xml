@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- named "lagoon" because the shared adaptive-icon XML refers to it; it is grass green here -->
+    <color name="lagoon">#FF79C25A</color>
+
+    <style name="AppTheme" parent="@android:style/Theme.Material.Light.NoActionBar.Fullscreen">
+        <!-- Grass green while the WebView loads, instead of a white flash -->
+        <item name="android:windowBackground">@color/lagoon</item>
+        <item name="android:statusBarColor">@color/lagoon</item>
+        <item name="android:navigationBarColor">@color/lagoon</item>
+    </style>
+</resources>

@@ -1,0 +1,19 @@
+{
+  "seeds": 98,
+  "sprout": 99,
+  "carrot-ripe": 100,
+  "corn-ripe": 101,
+  "tomato-ripe": 102,
+  "item-carrot": 103,
+  "item-corn": 104,
+  "grass": 105,
+  "soil": 106,
+  "barn": 107,
+  "item-tomato": 115,
+  "coop": 109,
+  "coin": 110,
+  "straw-hat": 111,
+  "corn-growing": 113,
+  "carrot-growing": 112,
+  "tomato-growing": 114
+}

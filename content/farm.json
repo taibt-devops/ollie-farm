@@ -1,0 +1,29 @@
+{
+  "style": "Word Island",
+  "assets": {
+    "seeds": {"kind": "prop", "prompt": "a small mound of freshly planted dark soil with a few seeds on top, seen from the front and slightly above"},
+    "sprout": {"kind": "prop", "prompt": "a tiny green seedling sprout with two small round leaves growing out of a little soil mound"},
+    "corn-ripe": {"kind": "prop", "prompt": "a ripe corn plant growing from the ground, tall green leaves and two big yellow corn cobs, full plant"},
+    "corn-growing": {"edit": "corn-ripe", "prompt": "the same corn plant but younger: half the height, all green leaves, no corn cobs yet"},
+    "carrot-ripe": {"kind": "prop", "prompt": "a carrot growing in the ground: bushy green leaves on top and the thick orange top of a big carrot poking out of a little soil mound"},
+    "carrot-growing": {"edit": "carrot-ripe", "prompt": "the same carrot plant but younger: smaller leaves and no orange carrot visible, only the soil mound and leaves"},
+    "tomato-ripe": {"kind": "prop", "prompt": "a tomato plant growing from the ground with green leaves and several ripe shiny red tomatoes, full plant"},
+    "tomato-growing": {"edit": "tomato-ripe", "prompt": "the same tomato plant but younger: smaller, with only a few small green unripe tomatoes"},
+    "item-corn": {"kind": "item", "prompt": "a single ear of corn with bright yellow kernels and green husk leaves"},
+    "item-carrot": {"kind": "item", "prompt": "a single fresh orange carrot with a green leafy top"},
+    "item-tomato": {"kind": "item", "prompt": "a single ripe red tomato, slightly flattened round shape with gentle lobes, topped by a small green star-shaped calyx of five pointy sepals; clearly a tomato, not an apple, no leaves"},
+    "grass": {"kind": "tile", "size": 256, "prompt": "lush green grass lawn seen from directly above, short grass blades and a few tiny white flowers"},
+    "soil": {"kind": "tile", "size": 256, "prompt": "tilled brown farm soil with neat straight furrow rows, seen from directly above"},
+    "barn": {"kind": "prop", "prompt": "a cute small red wooden farm barn with white trim and a big double door, front view"},
+    "coop": {"kind": "prop", "prompt": "a cute small wooden chicken coop with a little ramp and a straw nest inside, front view"},
+    "coin": {"kind": "item", "prompt": "a shiny gold coin with a star embossed in the center"},
+    "straw-hat": {"kind": "item", "prompt": "a straw farmer hat with a red ribbon band, front view"}
+  },
+  "reuse": {
+    "_note": "asset ids already in Game Asset Studio (Word Island + the chicken animation test)",
+    "item-egg": 26,
+    "ollie-base": 57, "ollie-happy": 58, "ollie-sad": 59, "ollie-wave": 60,
+    "chicken": 89
+  },
+  "chicken_animations": {"walk": "chicken walk", "peck": "chicken peck"}
+}

@@ -1,0 +1,230 @@
+/* Ollie's Farm — same sticker-book look as Word Island, set on a grassy farmyard. */
+:root {
+  --deep: #0f4c5c;
+  --sand: #ffe8b6;
+  --sun: #ffc93c;
+  --palm: #3dbb6a;
+  --coral: #ff6b5b;
+  --paper: #fffdf7;
+  --wood: #b07a45;
+  --wood-dark: #7a4f27;
+  --grass-img: none;
+  --soil-img: none;
+  --font: "Baloo 2", "Segoe UI", system-ui, sans-serif;
+  --hud-h: 64px;
+  --bar-h: 92px;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0; min-height: 100vh; min-height: 100dvh; overflow-x: hidden;
+  font: 700 18px/1.3 var(--font); color: var(--deep);
+  background: #79c25a var(--grass-img) repeat; background-size: 220px;
+  -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent;
+}
+#app { outline: none; }
+[hidden] { display: none !important; }   /* several pieces set display: grid/flex */
+button { font: inherit; color: inherit; border: 0; background: none; padding: 0; cursor: pointer; }
+img { display: block; max-width: 100%; -webkit-user-drag: none; }
+:focus-visible { outline: 4px solid var(--paper); outline-offset: 2px; }
+
+.press {
+  background: var(--sand); border: 3px solid var(--deep); border-radius: 16px;
+  box-shadow: 0 5px 0 var(--deep); transition: transform .08s, box-shadow .08s;
+}
+.press:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 2px 0 var(--deep); }
+.press:disabled { opacity: .45; cursor: default; }
+.pill {
+  display: inline-flex; align-items: center; gap: 6px; height: 46px; padding: 0 16px 0 8px;
+  background: var(--paper); border: 3px solid var(--deep); border-radius: 999px; font-size: 22px; font-weight: 800;
+}
+.pill img { width: 34px; }
+
+/* ---------- HUD ---------- */
+.hud {
+  position: sticky; top: 0; z-index: 30; height: var(--hud-h);
+  display: flex; align-items: center; gap: 12px; padding: 8px max(14px, env(safe-area-inset-right)) 8px max(14px, env(safe-area-inset-left));
+  background: linear-gradient(rgba(15, 76, 92, .55), rgba(15, 76, 92, 0));
+}
+.title { font-size: 26px; font-weight: 800; color: var(--paper); text-shadow: 0 2px 0 var(--deep), 0 0 6px rgba(15, 76, 92, .6); margin-right: auto; white-space: nowrap; }
+.level { gap: 10px; padding-right: 12px; }
+.level .badge {
+  width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--sun); border: 3px solid var(--deep); font-size: 18px;
+}
+.xp { width: 110px; height: 14px; border-radius: 99px; background: #e8dfcb; border: 2px solid var(--deep); overflow: hidden; }
+.xp i { display: block; height: 100%; background: var(--palm); transition: width .4s; }
+.barn-btn { display: flex; align-items: center; gap: 4px; height: 56px; padding: 0 12px 0 4px; border-radius: 16px; }
+.barn-btn img { height: 46px; }
+.barn-btn span { font-size: 20px; }
+
+/* ---------- layout ---------- */
+.farm {
+  display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 18px; align-items: start;
+  padding: 6px max(14px, env(safe-area-inset-right)) calc(var(--bar-h) + 20px) max(14px, env(safe-area-inset-left));
+}
+.side { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+
+/* ---------- field ---------- */
+.field-wrap {
+  --size: min(calc(100vh - var(--hud-h) - var(--bar-h) - 40px), 58vw);
+  width: var(--size); padding: 10px; border-radius: 22px;
+  background: var(--wood); border: 4px solid var(--wood-dark); box-shadow: 0 8px 0 rgba(60, 35, 15, .45);
+}
+.field { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; touch-action: none; }
+.plot {
+  position: relative; aspect-ratio: 1; border-radius: 10px; overflow: visible;
+  background: #8a5a33 var(--soil-img) center / cover;
+  box-shadow: inset 0 -4px 0 rgba(0, 0, 0, .18), inset 0 3px 6px rgba(0, 0, 0, .25);
+}
+.plot img { position: absolute; left: 6%; bottom: 4%; width: 88%; pointer-events: none; transform-origin: 50% 100%; }
+.plot.s0 img { width: 70%; left: 15%; }
+.plot.s1 img { width: 76%; left: 12%; }
+.plot.ripe img { animation: sway 2.2s ease-in-out infinite; }
+.plot.ripe::after {   /* sparkle so a child sees what is ready */
+  content: ""; position: absolute; right: 6%; top: 6%; width: 18%; aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(circle, #fff 0 30%, rgba(255, 201, 60, .9) 31% 60%, transparent 61%);
+  animation: twinkle 1.2s ease-in-out infinite;
+}
+.plot .grow { position: absolute; left: 12%; right: 12%; bottom: 5%; height: 7%; border-radius: 9px; background: rgba(0, 0, 0, .35); overflow: hidden; }
+.plot .grow i { display: block; height: 100%; background: var(--sun); }
+.plot.pop img { animation: harvest .35s ease-out; }
+.plot.flash { box-shadow: inset 0 0 0 4px var(--sun), inset 0 3px 6px rgba(0, 0, 0, .25); }
+
+/* ---------- pen ---------- */
+.pen {
+  position: relative; height: clamp(220px, 40vh, 330px); border-radius: 22px; overflow: hidden;
+  background: rgba(150, 214, 110, .55);
+  border: 8px solid var(--wood);
+  box-shadow: inset 0 0 0 3px #e3b47c, 0 6px 0 rgba(60, 35, 15, .35);
+}
+.pen::before {   /* fence pickets along the top edge */
+  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 26px; z-index: 1; pointer-events: none;
+  background: repeating-linear-gradient(90deg, #d9a56b 0 14px, transparent 14px 34px);
+  border-bottom: 5px solid var(--wood);
+}
+.pen .coop { position: absolute; right: 10px; top: 18px; width: clamp(110px, 22%, 170px); z-index: 2; }
+.pen .label { position: absolute; left: 12px; top: 30px; z-index: 3; font-size: 16px; color: var(--paper); text-shadow: 0 1px 2px var(--deep); }
+.chicken { position: absolute; left: 0; top: 0; width: clamp(70px, 9vw, 100px); z-index: 5; }
+.chicken .body { width: 100%; transition: none; }
+.chicken .bubble {
+  position: absolute; left: 50%; bottom: 96%; transform: translateX(-50%);
+  width: 52%; aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center;
+  background: var(--paper); border: 3px solid var(--deep); animation: bob 1s ease-in-out infinite;
+}
+.chicken .bubble img { width: 70%; }
+.chicken .lay { position: absolute; left: 20%; right: 20%; bottom: -10px; height: 8px; border-radius: 9px; background: rgba(15, 76, 92, .35); overflow: hidden; }
+.chicken .lay i { display: block; height: 100%; background: var(--sun); }
+.egg { position: absolute; width: clamp(40px, 5vw, 56px); z-index: 900;   /* above wandering chickens */ animation: drop .5s cubic-bezier(.3, 1.6, .5, 1) both, glow 1.4s ease-in-out .5s infinite; }
+
+/* ---------- orders ---------- */
+.orders { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.order {
+  position: relative; padding: 10px 10px 12px; border-radius: 16px; background: var(--paper);
+  border: 3px solid var(--deep); box-shadow: 0 5px 0 rgba(15, 76, 92, .45);
+  display: flex; flex-direction: column; gap: 6px; min-height: 196px;
+}
+.order::before { content: ""; position: absolute; top: -9px; left: 50%; width: 16px; height: 16px; margin-left: -8px; border-radius: 50%; background: var(--coral); border: 3px solid var(--deep); }
+.order-line { display: flex; align-items: center; gap: 6px; font-size: clamp(17px, 1.6vw, 22px); line-height: 1; }
+.order-line span:nth-of-type(1) { white-space: nowrap; }
+.order-line img { width: 40px; flex: none; }
+.order-line .have { margin-left: auto; font-size: 15px; padding: 2px 7px; border-radius: 99px; background: #eee3cc; }
+.order-line .have.ok { background: var(--palm); color: var(--paper); }
+.order .reward { display: flex; gap: 10px; align-items: center; font-size: 17px; margin-top: auto; }
+.order .reward img { width: 24px; }
+.order .row { display: flex; gap: 6px; }
+.order .row .press { height: 44px; display: grid; place-items: center; }
+.order .speak { width: 44px; }
+.order .deliver { flex: 1; font-size: 19px; background: var(--sun); }
+.order .toss { width: 44px; font-size: 18px; }
+.order.leaving { animation: leave .6s ease-in forwards; }
+.order.fresh { animation: arrive .5s cubic-bezier(.3, 1.4, .5, 1); }
+.order.wait { justify-content: center; align-items: center; text-align: center; color: rgba(15, 76, 92, .6); }
+
+/* ---------- toolbar + Ollie ---------- */
+.toolbar {
+  position: fixed; left: 0; bottom: 0; z-index: 30; height: var(--bar-h);
+  display: flex; align-items: flex-end; gap: 10px; padding: 0 0 max(10px, env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left));
+}
+.tool { position: relative; width: 74px; height: 74px; display: grid; place-items: center; border-radius: 18px; }
+.tool img { width: 64%; }
+.tool .price { position: absolute; bottom: -6px; right: -6px; display: flex; align-items: center; gap: 1px; font-size: 14px; padding: 0 6px 0 2px; border-radius: 99px; background: var(--paper); border: 2px solid var(--deep); }
+.tool .price img { width: 18px; }
+.tool.on { background: var(--sun); transform: translateY(-6px); box-shadow: 0 11px 0 var(--deep); }
+.tool.locked img { filter: grayscale(1) opacity(.5); }
+.tool .lock { position: absolute; inset: auto 0 6px; text-align: center; font-size: 13px; }
+.tool .hand { font-size: 34px; line-height: 1; }
+.helper {
+  position: fixed; right: max(12px, env(safe-area-inset-right)); bottom: max(8px, env(safe-area-inset-bottom)); z-index: 31;
+  display: flex; align-items: flex-end; gap: 8px; max-width: min(520px, 60vw); pointer-events: none;
+}
+.helper .tip {
+  pointer-events: auto; margin-bottom: 18px; padding: 10px 14px; font-size: 18px; font-weight: 700; line-height: 1.3;
+  background: var(--paper); border: 3px solid var(--deep); border-radius: 18px; position: relative;
+}
+.helper .tip::after { content: ""; position: absolute; right: -12px; bottom: 16px; width: 16px; height: 16px; background: var(--paper); border-right: 3px solid var(--deep); border-top: 3px solid var(--deep); transform: rotate(45deg); }
+.ollie { position: relative; width: 96px; flex: none; pointer-events: auto; }
+.ollie > img:first-child { width: 100%; }
+.ollie .hat { position: absolute; left: 50%; top: 0; width: 60%; transform: translate(-50%, -38%) rotate(-6deg); }
+
+/* ---------- floating bits, panels ---------- */
+.float {
+  position: fixed; z-index: 60; pointer-events: none; font-size: 24px; font-weight: 800;
+  color: var(--paper); text-shadow: 0 2px 0 var(--deep), 0 0 4px var(--deep);
+  animation: rise 1s ease-out forwards;
+}
+.flyer { position: fixed; z-index: 60; pointer-events: none; width: 44px; }
+.toast-tip { position: absolute; left: 50%; top: -6px; transform: translate(-50%, -100%); z-index: 40; white-space: nowrap; padding: 4px 10px; font-size: 15px; background: var(--paper); border: 2px solid var(--deep); border-radius: 10px; }
+.shade { position: fixed; inset: 0; z-index: 80; background: rgba(15, 40, 30, .55); display: grid; place-items: center; padding: 16px; }
+.panel {
+  width: min(560px, 100%); max-height: 90vh; overflow: auto; padding: 18px; border-radius: 22px;
+  background: var(--paper); border: 4px solid var(--deep); text-align: center;
+}
+.panel h2 { margin: 0 0 10px; font-size: 32px; }
+.panel p { margin: 6px 0; font-size: 20px; font-weight: 600; }
+.panel .close { margin-top: 14px; padding: 8px 28px; font-size: 22px; background: var(--sun); }
+.barn-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; }
+.barn-item { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 10px 6px; border-radius: 14px; }
+.barn-item img { width: 60px; }
+.barn-item b { font-size: 26px; }
+.barn-item span { font-size: 15px; font-weight: 600; }
+.panel .big-ollie { width: 140px; margin: 0 auto 6px; position: relative; }
+.panel .unlock { display: inline-flex; align-items: center; gap: 8px; margin-top: 6px; padding: 6px 14px; border-radius: 14px; background: var(--sand); }
+.panel .unlock img { width: 48px; }
+
+@keyframes sway { 50% { transform: rotate(-4deg); } }
+@keyframes twinkle { 50% { transform: scale(.4); opacity: .3; } }
+@keyframes harvest { 50% { transform: scale(1.3) translateY(-12%); } }
+@keyframes bob { 50% { transform: translate(-50%, -5px); } }
+@keyframes drop { from { transform: translateY(-40px) scale(.4); opacity: 0; } }
+@keyframes glow { 50% { filter: drop-shadow(0 0 8px var(--sun)); } }
+@keyframes rise { to { transform: translateY(-60px); opacity: 0; } }
+@keyframes leave { to { transform: translateX(60px) rotate(8deg); opacity: 0; } }
+@keyframes arrive { from { transform: translateY(-30px) scale(.8); opacity: 0; } }
+@keyframes shake { 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
+.nope { animation: shake .35s; }
+
+/* ---------- portrait / phone ---------- */
+@media (max-aspect-ratio: 1/1), (max-width: 760px) {
+  .farm { grid-template-columns: 1fr; }
+  .field-wrap { --size: min(100%, 560px); justify-self: center; width: var(--size); }
+  .title { font-size: 20px; }
+  .xp { width: 64px; }
+  .orders { grid-template-columns: repeat(3, minmax(150px, 1fr)); overflow-x: auto; padding-bottom: 8px; }
+  /* fixed toolbar + Ollie take the bottom ~190px: leave room so orders can scroll above them */
+  .farm { padding-bottom: calc(var(--bar-h) + 120px); }
+  .toolbar { right: 0; padding-top: 10px; background: #6fb553; border-top: 4px solid var(--wood); }
+  .helper { max-width: calc(100vw - 24px); bottom: calc(var(--bar-h) + 8px); }
+  .helper .tip { font-size: 15px; padding: 7px 10px; margin-bottom: 10px; }
+  .ollie { width: 58px; }
+  .tool { width: 64px; height: 64px; }
+}
+@media (max-width: 480px) {
+  .title { display: none; }
+  .hud { gap: 8px; }
+  .pill { height: 40px; font-size: 18px; }
+  .level .badge { width: 30px; height: 30px; font-size: 15px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
